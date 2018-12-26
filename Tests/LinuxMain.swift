@@ -3,5 +3,6 @@ import XCTest
 import RoutingTableTests
 
 var tests = [XCTestCaseEntry]()
-tests += RoutingTableTests.allTests()
+tests += RoutingTableTests.__allTests()
+
 XCTMain(tests)

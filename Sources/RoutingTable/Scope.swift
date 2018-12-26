@@ -12,7 +12,7 @@ struct Scope: Routable {
         self.children = children
     }
     
-    func register(routes router: Router) {
+    func register(routes router: RuntimeRouter) {
         let subpath = router.grouped(pathComponents).grouped(middleware)
         for child in children {
             child.register(routes: subpath)

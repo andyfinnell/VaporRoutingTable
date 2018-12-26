@@ -2,11 +2,11 @@ import Foundation
 import Vapor
 
 public protocol ResourceReflectable {
-    static func allRoutes(parameter: PathComponent, only: [Resource.Verb], except: [Resource.Verb]) -> [Routable]
+    static func allRoutes(parameter: PathComponent, only: [ResourceVerb], except: [ResourceVerb]) -> [Routable]
 }
 
 extension ResourceReflectable {
-    static func allRoutes(parameter: PathComponent, only: [Resource.Verb], except: [Resource.Verb]) -> [Routable] {
+    static func allRoutes(parameter: PathComponent, only: [ResourceVerb], except: [ResourceVerb]) -> [Routable] {
         let verbs = Set(only).subtracting(except)
         let index = ResourceReflectableSupport.cast(Self.self, to: AnyResourceIndexable.Type.self, if: .index, in: verbs) { $0.indexRoute() }
         
@@ -27,7 +27,7 @@ extension ResourceReflectable {
 }
 
 private struct ResourceReflectableSupport {
-    static func cast<F, T>(_ fromType: F, to toType: T.Type, if verb: Resource.Verb, in supportedVerbs: Set<Resource.Verb>, closure: (T) -> [Routable]) -> [Routable] {
+    static func cast<F, T>(_ fromType: F, to toType: T.Type, if verb: ResourceVerb, in supportedVerbs: Set<ResourceVerb>, closure: (T) -> [Routable]) -> [Routable] {
         guard let typeInstance = fromType as? T, supportedVerbs.contains(verb) else {
             return []
         }

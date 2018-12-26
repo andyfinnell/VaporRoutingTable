@@ -1,30 +1,29 @@
 import Foundation
 import Vapor
 
-struct RouteEndpointWithParameters<C: Service, ParametersType: RequestDecodable, ResponseType: ResponseEncodable>: Routable {
-    let pathComponents: [PathComponentsRepresentable]
-    let method: HTTPMethod
-    let closure: (C) -> ((Request, ParametersType) throws -> ResponseType)
-    
-    func register(routes router: Router) {
-        router.on(method, ParametersType.self, at: pathComponents) { request, parameters throws -> ResponseType in
-            let controller = try request.make(C.self)
-            let handler = self.closure(controller)
-            return try handler(request, parameters)
-        }
-    }
-}
-
 struct RouteEndpoint<C: Service, ResponseType: ResponseEncodable>: Routable {
-    let pathComponents: [PathComponentsRepresentable]
-    let method: HTTPMethod
-    let closure: (C) -> ((Request) throws -> ResponseType)
+    private let pathComponents: [PathComponentsRepresentable]
+    private let method: HTTPMethod
+    private let closure: (C) -> ((Request) throws -> ResponseType)
     
-    func register(routes router: Router) {
+    init(pathComponents: [PathComponentsRepresentable], method: HTTPMethod, closure: @escaping (C) -> ((Request) throws -> ResponseType)) {
+        self.pathComponents = pathComponents
+        self.method = method
+        self.closure = closure
+    }
+
+    func register(routes router: RuntimeRouter) {
         router.on(method, at: pathComponents) { request throws -> ResponseType in
             let controller = try request.make(C.self)
             let handler = self.closure(controller)
             return try handler(request)
         }
+    }
+}
+
+extension RouteEndpoint: Equatable {
+    static func ==(lhs: RouteEndpoint, rhs: RouteEndpoint) -> Bool {
+        return lhs.pathComponents.convertToPathComponents() == rhs.pathComponents.convertToPathComponents()
+            && lhs.method == rhs.method
     }
 }

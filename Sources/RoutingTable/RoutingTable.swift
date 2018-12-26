@@ -9,6 +9,10 @@ public struct RoutingTable {
     }
     
     public func register(routes router: Router) {
+        register(routes: VaporRuntimeRouter(router: router))
+    }
+    
+    func register(routes router: RuntimeRouter) {
         for child in children {
             child.register(routes: router)
         }

@@ -1,23 +1,23 @@
 import Foundation
 import Vapor
 
-public struct Resource: Routable {
+public enum ResourceVerb: Hashable, CaseIterable {
+    case index, show, create, update, delete, new, edit
+}
+
+struct Resource: Routable {
     private let pathComponents: [PathComponentsRepresentable]
     private let parameter: PathComponent
     private let middleware: [Middleware]
     private let children: [Routable]
     private let verbs: [Routable]
     
-    public enum Verb: Hashable, CaseIterable {
-        case index, show, create, update, delete, new, edit
-    }
-    
     init<C, P>(pathComponents: [PathComponentsRepresentable],
                           parameter: P.Type,
                           middleware: [Middleware],
                           controller: C.Type,
-                          only: [Verb],
-                          except: [Verb],
+                          only: [ResourceVerb],
+                          except: [ResourceVerb],
                           children: [Routable])
         where C: Service, C: ResourceReflectable, P: Parameter
     {
@@ -28,12 +28,12 @@ public struct Resource: Routable {
         self.verbs = controller.allRoutes(parameter: P.parameter, only: only, except: except)
     }
     
-    public func register(routes router: Router) {
+    func register(routes router: RuntimeRouter) {
         let subpath = router.grouped(pathComponents).grouped(middleware)
         for verb in verbs {
             verb.register(routes: subpath)
         }
-        let childPath = subpath.grouped(parameter)
+        let childPath = subpath.grouped([parameter])
         for child in children {
             child.register(routes: childPath)
         }
