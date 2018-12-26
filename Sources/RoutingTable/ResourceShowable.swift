@@ -11,8 +11,8 @@ public protocol ResourceShowable: AnyResourceShowable, Service, ResourceReflecta
     func show(_ request: Request) throws -> ShowResponseType
 }
 
-extension ResourceShowable {
-    static func showRoute(parameter: PathComponent) -> [Routable] {
+public extension ResourceShowable {
+    public static func showRoute(parameter: PathComponent) -> [Routable] {
         let show = RouteEndpoint(pathComponents: [parameter], method: .GET, closure: Self.show)
         return [show]
     }

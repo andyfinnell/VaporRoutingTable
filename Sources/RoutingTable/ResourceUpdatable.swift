@@ -12,8 +12,8 @@ public protocol ResourceUpdatable: AnyResourceUpdatable, Service, ResourceReflec
     func update(_ request: Request, parameters: UpdateRequestType) throws -> UpdateResponseType
 }
 
-extension ResourceUpdatable {
-    static func updateRoute(parameter: PathComponent) -> [Routable] {
+public extension ResourceUpdatable {
+    public static func updateRoute(parameter: PathComponent) -> [Routable] {
         let update1 = RouteEndpointWithParameters(pathComponents: [parameter], method: .PUT, closure: Self.update)
         let update2 = RouteEndpointWithParameters(pathComponents: [parameter], method: .PATCH, closure: Self.update)
         return [update1, update2]

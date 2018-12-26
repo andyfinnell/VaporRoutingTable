@@ -11,8 +11,8 @@ public protocol ResourceNewable: AnyResourceNewable, Service, ResourceReflectabl
     func new(_ request: Request) throws -> NewResponseType
 }
 
-extension ResourceNewable {
-    static func newRoute() -> [Routable] {
+public extension ResourceNewable {
+    public static func newRoute() -> [Routable] {
         let new = RouteEndpoint(pathComponents: ["new"], method: .GET, closure: Self.new)
         return [new]
     }

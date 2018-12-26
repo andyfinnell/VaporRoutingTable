@@ -11,8 +11,8 @@ public protocol ResourceDeletable: AnyResourceDeletable, Service, ResourceReflec
     func delete(_ request: Request) throws -> DeleteResponseType
 }
 
-extension ResourceDeletable {
-    static func deleteRoute(parameter: PathComponent) -> [Routable] {
+public extension ResourceDeletable {
+    public static func deleteRoute(parameter: PathComponent) -> [Routable] {
         let delete = RouteEndpoint(pathComponents: [parameter], method: .DELETE, closure: Self.delete)
         return [delete]
     }

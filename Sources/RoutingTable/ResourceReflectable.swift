@@ -5,8 +5,8 @@ public protocol ResourceReflectable {
     static func allRoutes(parameter: PathComponent, only: [ResourceVerb], except: [ResourceVerb]) -> [Routable]
 }
 
-extension ResourceReflectable {
-    static func allRoutes(parameter: PathComponent, only: [ResourceVerb], except: [ResourceVerb]) -> [Routable] {
+public extension ResourceReflectable {
+    public static func allRoutes(parameter: PathComponent, only: [ResourceVerb], except: [ResourceVerb]) -> [Routable] {
         let verbs = Set(only).subtracting(except)
         let index = ResourceReflectableSupport.cast(Self.self, to: AnyResourceIndexable.Type.self, if: .index, in: verbs) { $0.indexRoute() }
         

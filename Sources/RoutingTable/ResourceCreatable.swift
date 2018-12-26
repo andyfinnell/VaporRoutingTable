@@ -12,8 +12,8 @@ public protocol ResourceCreatable: AnyResourceCreatable, Service, ResourceReflec
     func create(_ request: Request, parameters: CreateRequestType) throws -> CreateResponseType
 }
 
-extension ResourceCreatable {
-    static func createRoute() -> [Routable] {
+public extension ResourceCreatable {
+    public static func createRoute() -> [Routable] {
         let create = RouteEndpointWithParameters(pathComponents: [], method: .POST, closure: Self.create)
         return [create]
     }

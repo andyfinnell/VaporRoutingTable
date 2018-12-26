@@ -11,8 +11,8 @@ public protocol ResourceIndexable: AnyResourceIndexable, Service, ResourceReflec
     func index(_ request: Request) throws -> IndexResponseType
 }
 
-extension ResourceIndexable {
-    static func indexRoute() -> [Routable] {
+public extension ResourceIndexable {
+    public static func indexRoute() -> [Routable] {
         let index = RouteEndpoint(pathComponents: [], method: .GET, closure: Self.index)
         return [index]
     }
